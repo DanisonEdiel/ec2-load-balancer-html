@@ -25,7 +25,7 @@ jobs:
       - name: Restart Apache
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 54.221.144.153
+          host: 3.94.55.214
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
