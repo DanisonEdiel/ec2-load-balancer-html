@@ -21,7 +21,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /githubfiles/
-            git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
+            sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
           debug: true
       - name: deploy Apache
@@ -32,6 +32,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /githubfiles/
-            git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
+            sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
           debug: true
