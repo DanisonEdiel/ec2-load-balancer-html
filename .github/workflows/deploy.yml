@@ -1,0 +1,37 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main # Despliega solo cambios en la rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: deploy Apache
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 3.87.219.21
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/githubfiles/
+            git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
+            sudo systemctl restart httpd
+          debug: true
+      - name: deploy Apache
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 52.91.253.214
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/githubfiles/
+            git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
+            sudo systemctl restart httpd
+          debug: true
