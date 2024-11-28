@@ -16,22 +16,22 @@ jobs:
       - name: deploy Apache
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 3.84.117.49
+          host: 34.203.40.217
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /githubfiles/
+            cd /project/
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
           debug: true
       - name: deploy Apache
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 44.211.62.58
+          host: 52.207.249.42
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /githubfiles/
+            cd /project/
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
           debug: true
