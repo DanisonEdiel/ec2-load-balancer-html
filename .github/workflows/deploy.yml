@@ -16,7 +16,7 @@ jobs:
       - name: deploy Apache
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 34.203.40.217
+          host: 3.86.223.81
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
@@ -28,7 +28,7 @@ jobs:
       - name: deploy Apache
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 52.207.249.42
+          host: 44.201.196.82
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
