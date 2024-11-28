@@ -20,7 +20,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /project/
+            cd /project
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
           debug: true
@@ -31,7 +31,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /project/
+            cd /project
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
           debug: true
