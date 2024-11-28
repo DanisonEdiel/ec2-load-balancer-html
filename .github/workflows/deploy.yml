@@ -23,6 +23,7 @@ jobs:
             cd /project
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
+            git config --global --add safe.directory /project
           debug: true
       - name: deploy Apache
         uses: appleboy/ssh-action@v1.2.0
@@ -34,4 +35,5 @@ jobs:
             cd /project
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
             sudo systemctl restart httpd
+            git config --global --add safe.directory /project
           debug: true
