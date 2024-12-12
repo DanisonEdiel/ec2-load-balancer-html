@@ -1,4 +1,4 @@
-name: Deploy Hola
+name: Deploy HTML File
 
 on:
   push:
@@ -22,14 +22,17 @@ jobs:
           script: |
             sudo apt-get update
             sudo apt-get install -y apache2
+            sudo systemctl enable apache2
+            sudo systemctl start apache2
             sudo mkdir -p /var/www/html
             sudo chown -R ${{ secrets.EC2_USER }} /var/www/html
+            sudo chmod -R 755 /var/www/html
           debug: true
 
       - name: Deploy HTML file to AWS EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.EC2_HOST }}        
+          host: ${{ secrets.EC2_HOST }}        # IP pública de tu instancia EC2
           username: ${{ secrets.EC2_USER }}    # Usuario SSH, por ejemplo: ec2-user o ubuntu
           key: ${{ secrets.EC2_KEY }}          # Clave privada SSH desde los secretos de GitHub
           source: "./index.html"               # Fuente, que es el archivo HTML en tu repositorio
