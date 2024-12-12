@@ -1,39 +1,45 @@
-name: Deploy to EC2
+name: Deploy Hello Proyect
 
 on:
   push:
     branches:
-      - main # Despliega solo cambios en la rama principal
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout the code
         uses: actions/checkout@v3
 
-      - name: deploy Apache
+      - name: Setup Node.js (opcional si usas npm o dependencias JS)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies (opcional)
+        run: echo "No se necesitan dependencias de Node.js"
+
+      - name: Deploy to AWS EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}        # IP pública de tu instancia EC2
+          username: ${{ secrets.EC2_USER }}    # Usuario SSH, por ejemplo: ec2-user o ubuntu
+          key: ${{ secrets.EC2_KEY }}          # Clave privada SSH desde los secretos de GitHub
+          source: "./"                         # Fuente, que es el directorio actual en tu repositorio
+          target: "/var/www/html"              # Directorio destino en tu EC2
+
+      - name: Configure EC2 instance
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: 35.173.232.140
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /project
+            sudo apt-get update
+            sudo apt-get install -y apache2
+            cd /var/www/html
             sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
-            sudo systemctl restart httpd
-            git config --global --add safe.directory /project
-          debug: true
-      - name: deploy Apache
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: 18.207.188.202
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /project
-            sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
-            sudo systemctl restart httpd
-            git config --global --add safe.directory /project
+            sudo systemctl restart apache2
           debug: true
