@@ -1,4 +1,4 @@
-name: Deploy Hello Proyect
+name: Deploy Hola
 
 on:
   push:
@@ -13,23 +13,6 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js (opcional si usas npm o dependencias JS)
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies (opcional)
-        run: echo "No se necesitan dependencias de Node.js"
-
-      - name: Deploy to AWS EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}        # IP pública de tu instancia EC2
-          username: ${{ secrets.EC2_USER }}    # Usuario SSH, por ejemplo: ec2-user o ubuntu
-          key: ${{ secrets.EC2_KEY }}          # Clave privada SSH desde los secretos de GitHub
-          source: "./"                         # Fuente, que es el directorio actual en tu repositorio
-          target: "/var/www/html"              # Directorio destino en tu EC2
-
       - name: Configure EC2 instance
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -39,7 +22,25 @@ jobs:
           script: |
             sudo apt-get update
             sudo apt-get install -y apache2
-            cd /var/www/html
-            sudo git pull https://github.com/DanisonEdiel/ec2-load-balancer-html.git
+            sudo mkdir -p /var/www/html
+            sudo chown -R ${{ secrets.EC2_USER }} /var/www/html
+          debug: true
+
+      - name: Deploy HTML file to AWS EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}        
+          username: ${{ secrets.EC2_USER }}    # Usuario SSH, por ejemplo: ec2-user o ubuntu
+          key: ${{ secrets.EC2_KEY }}          # Clave privada SSH desde los secretos de GitHub
+          source: "./index.html"               # Fuente, que es el archivo HTML en tu repositorio
+          target: "/var/www/html/index.html"   # Directorio destino en tu EC2
+
+      - name: Restart Apache
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
             sudo systemctl restart apache2
           debug: true
